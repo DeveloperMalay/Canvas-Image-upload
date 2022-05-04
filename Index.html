@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FavricJs Project</title>
+    <style>
+      .container {
+        width: 1000px;
+        height: 550px;
+        background-color: rgb(58, 28, 140);
+        color: #fff;
+        padding: 20px;
+        margin: 25px 10px 10px 140px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      #canvas {
+        margin: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="container">
+      <canvas
+        id="canvas"
+        width="500"
+        height="500"
+        style="border: 1px solid #fff"
+      ></canvas>
+      <div class="btn">
+        <label for="uploader">Select file:</label>
+        <input type="file" id="uploader" />
+      </div>
+    </main>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const reader = new FileReader();
+      const img = new Image();
+
+
+      
+      const uploadImage = (e) => {
+        reader.onload = () => {
+          img.onload = () => {
+            var MAX_WIDTH = 500;
+            var MAX_HEIGHT = 500;
+
+            var width = img.width;
+            var height = img.height;
+
+            // Change the resizing logic
+            if (width > height) {
+              if (width > MAX_WIDTH) {
+                height = height * (MAX_WIDTH / width);
+                width = MAX_WIDTH;
+              }
+            } else {
+              if (height > MAX_HEIGHT) {
+                width = width * (MAX_HEIGHT / height);
+                height = MAX_HEIGHT;
+              }
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.drawImage(img, 0, 0, width, height);
+            ctx.mozImageSmoothingEnabled = false;
+            ctx.webkitImageSmoothingEnabled = false;
+            ctx.msImageSmoothingEnabled = false;
+            ctx.imageSmoothingEnabled = false;
+          };
+          img.src = reader.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      };
+      const imageLoader = document.getElementById("uploader");
+      imageLoader.addEventListener("change", uploadImage);
+    </script>
+  </body>
+</html>
